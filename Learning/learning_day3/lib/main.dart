@@ -122,20 +122,30 @@ class FavoritesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
+    if (appState.favorites.isEmpty) {
+      return Center(child: Text('No favorites yet.'));
+    }
+
     return ListView(
       children: [
-        Column(
-          children: [
-            Text(
-              'List Favorites here:',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Row(
-              children: [
-                for (var fav in appState.favorites) CardFavorite(pair: fav),
-              ],
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Text(
+                'List Favorites here:',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              SizedBox(height: 10),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: [
+                  for (var fav in appState.favorites) CardFavorite(pair: fav),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -152,7 +162,10 @@ class CardFavorite extends StatelessWidget {
     var appState = context.watch<MyAppState>();
 
     return ElevatedButton.icon(
-      onPressed: () => appState.unFavorite(pair),
+      onPressed: () => {
+        appState.unFavorite(pair),
+        debugPrint('unfavorite ${appState.favorites.isEmpty}'),
+      },
       icon: Icon(Icons.favorite),
       label: Text(pair.asLowerCase),
     );
