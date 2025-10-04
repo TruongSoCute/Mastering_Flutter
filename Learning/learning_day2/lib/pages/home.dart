@@ -57,6 +57,23 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   return Container(
                     height: 100,
+                    decoration: BoxDecoration(
+                      color: populars[index].viewIsSelected
+                          ? Colors.white
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: populars[index].viewIsSelected
+                          ? [
+                              BoxShadow(
+                                color: const Color(
+                                  0xff1D1617,
+                                ).withValues(alpha: 0.3),
+                                blurRadius: 40,
+                                spreadRadius: 0,
+                              ),
+                            ]
+                          : [],
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -78,11 +95,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             Text(
-                              populars[index].level +
-                                  ' | ' +
-                                  populars[index].duration +
-                                  ' | ' +
-                                  populars[index].calories,
+                              '${populars[index].level} | ${populars[index].duration} | ${populars[index].calories}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
@@ -100,23 +113,6 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ],
-                    ),
-                    decoration: BoxDecoration(
-                      color: populars[index].viewIsSelected
-                          ? Colors.white
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: populars[index].viewIsSelected
-                          ? [
-                              BoxShadow(
-                                color: const Color(
-                                  0xff1D1617,
-                                ).withValues(alpha: 0.3),
-                                blurRadius: 40,
-                                spreadRadius: 0,
-                              ),
-                            ]
-                          : [],
                     ),
                   );
                 },
@@ -149,7 +145,7 @@ class _HomePageState extends State<HomePage> {
         ),
         SizedBox(height: 20),
 
-        Container(
+        SizedBox(
           height: 240,
           child: ListView.separated(
             itemBuilder: (context, index) {
@@ -237,7 +233,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(height: 20),
-        Container(
+        SizedBox(
           height: 150,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
@@ -288,9 +284,10 @@ class _HomePageState extends State<HomePage> {
     return Container(
       margin: EdgeInsets.only(top: 40, left: 20, right: 20),
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Color.fromARGB(32, 40, 40, 40),
+            color: Color(0xff1D1617).withValues(alpha: 0.11),
             blurRadius: 40,
             spreadRadius: 0.0,
           ),
@@ -298,29 +295,37 @@ class _HomePageState extends State<HomePage> {
       ),
       child: TextField(
         decoration: InputDecoration(
-          hintText: 'Search',
-          hintStyle: TextStyle(color: Color(0xffDDDADA), fontSize: 16),
+          hintText: 'Search pancake',
+          hintStyle: TextStyle(
+            color: Color(0xffDDDADA),
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
           contentPadding: EdgeInsets.all(15),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(12),
-            child: SvgPicture.asset('assets/icons/search-svgrepo-com.svg'),
+            child: SvgPicture.asset(
+              'assets/icons/search-svgrepo-com.svg',
+              color: Color(0xff7B6F72),
+            ),
           ),
-          suffixIcon: SizedBox(
+          suffixIcon: Container(
             width: 100,
             child: IntrinsicHeight(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   VerticalDivider(
-                    color: Colors.black,
+                    color: Colors.black.withValues(alpha: 0.1),
                     indent: 10,
                     endIndent: 10,
-                    thickness: 0.8,
+                    thickness: 0.1,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(8),
                     child: SvgPicture.asset(
                       'assets/icons/filter-svgrepo-com.svg',
+                      color: Color(0xff7B6F72),
                     ),
                   ),
                 ],
@@ -329,6 +334,18 @@ class _HomePageState extends State<HomePage> {
           ),
           filled: true,
           fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Color(0xff92A3FD), width: 1),
+          ),
         ),
       ),
     );
@@ -348,34 +365,332 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.2),
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
-        child: GestureDetector(
-          onTap: () {},
-          child: SvgPicture.asset(
+        child: PopupMenuButton<String>(
+          icon: SvgPicture.asset(
             'assets/icons/left-arrow-svgrepo-com.svg',
-            height: 30,
-            width: 30,
+            height: 20,
+            width: 20,
           ),
+          onSelected: (String value) {
+            switch (value) {
+              case 'back':
+                Navigator.of(context).pop();
+                break;
+              case 'home':
+                // Navigate to home
+                break;
+              case 'previous':
+                break;
+            }
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              value: 'back',
+              child: ListTile(
+                leading: Icon(Icons.arrow_back, color: Colors.black54),
+                title: Text('Go Back'),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+            const PopupMenuItem<String>(
+              value: 'home',
+              child: ListTile(
+                leading: Icon(Icons.home, color: Colors.black54),
+                title: Text('Home'),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+            const PopupMenuItem<String>(
+              value: 'previous',
+              child: ListTile(
+                leading: Icon(Icons.skip_previous, color: Colors.black54),
+                title: Text('Previous Page'),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 8,
+          offset: Offset(0, 50),
         ),
       ),
       actions: [
         Container(
           margin: EdgeInsets.all(10),
-          width: 30,
+          width: 40,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withValues(alpha: 0.2),
+                blurRadius: 8,
+                offset: Offset(0, 2),
+              ),
+            ],
           ),
-          child: GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset(
+          child: PopupMenuButton<String>(
+            icon: SvgPicture.asset(
               'assets/icons/dot-menu-more-2-svgrepo-com.svg',
-              height: 30,
-              width: 30,
+              height: 20,
+              width: 20,
             ),
+            onSelected: (String value) {
+              switch (value) {
+                case 'settings':
+                  // Navigate to settings
+                  _showSettingsDialog(context);
+                  break;
+                case 'profile':
+                  _showProfileDialog(context);
+                  break;
+                case 'favorites':
+                  _showFavoritesDialog(context);
+                  break;
+                case 'help':
+                  _showHelpDialog(context);
+                  break;
+                case 'about':
+                  _showAboutDialog(context);
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'settings',
+                child: ListTile(
+                  leading: Icon(Icons.settings, color: Colors.black54),
+                  title: Text('Settings'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'profile',
+                child: ListTile(
+                  leading: Icon(Icons.person, color: Colors.black54),
+                  title: Text('Profile'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem<String>(
+                value: 'favorites',
+                child: ListTile(
+                  leading: Icon(Icons.favorite, color: Colors.red),
+                  title: Text('Favorites'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'help',
+                child: ListTile(
+                  leading: Icon(Icons.help, color: Colors.blue),
+                  title: Text('Help'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'about',
+                child: ListTile(
+                  leading: Icon(Icons.info, color: Colors.green),
+                  title: Text('About'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 8,
+            offset: Offset(-20, 50),
           ),
         ),
+      ],
+    );
+  }
+
+  void _showSettingsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.settings, color: Colors.blue),
+              SizedBox(width: 8),
+              Text('Settings'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.dark_mode),
+                title: Text('Dark Mode'),
+                trailing: Switch(value: false, onChanged: (val) {}),
+              ),
+              ListTile(
+                leading: Icon(Icons.notifications),
+                title: Text('Notifications'),
+                trailing: Switch(value: true, onChanged: (val) {}),
+              ),
+              ListTile(
+                leading: Icon(Icons.language),
+                title: Text('Language'),
+                trailing: Text('English'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showProfileDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: Icon(Icons.person, color: Colors.white),
+              ),
+              SizedBox(width: 12),
+              Text('Profile'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Name: John Doe', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 8),
+              Text('Email: john@example.com', style: TextStyle(fontSize: 16)),
+              SizedBox(height: 8),
+              Text('Joined: January 2024', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Edit Profile'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showFavoritesDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.favorite, color: Colors.red),
+              SizedBox(width: 8),
+              Text('Favorites'),
+            ],
+          ),
+          content: Text('Your favorite recipes and meals will appear here.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('View All'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showHelpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.help, color: Colors.blue),
+              SizedBox(width: 8),
+              Text('Help & Support'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('• How to use the app'),
+              Text('• FAQ'),
+              Text('• Contact support'),
+              Text('• Report a bug'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Contact Us'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAboutDialog(BuildContext context) {
+    showAboutDialog(
+      context: context,
+      applicationName: 'Diet App',
+      applicationVersion: '1.0.0',
+      applicationIcon: Icon(Icons.restaurant, size: 32, color: Colors.green),
+      children: [
+        Text('A beautiful diet and nutrition tracking app.'),
+        SizedBox(height: 8),
+        Text('Made with Flutter ❤️'),
       ],
     );
   }

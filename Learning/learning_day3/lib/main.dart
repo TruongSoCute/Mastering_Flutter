@@ -1,6 +1,5 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -191,6 +190,39 @@ class GeneratorPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Enter your text',
+                hintText: 'Type something here...',
+                prefixIcon: Icon(Icons.search),
+                suffixIcon: Icon(Icons.clear),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(color: Colors.blue, width: 2),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide(color: Colors.blue, width: 2),
+                ),
+                filled: true,
+                fillColor: Colors.grey.shade50,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 15,
+                ),
+                labelStyle: TextStyle(color: Colors.grey.shade600),
+                hintStyle: TextStyle(color: Colors.grey.shade400),
+              ),
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          SizedBox(height: 20),
           BigCard(pair: pair),
           SizedBox(height: 10),
           Row(
@@ -203,13 +235,26 @@ class GeneratorPage extends StatelessWidget {
                 },
                 icon: Icon(icon),
                 label: Text('Like'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
               ),
+              SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () {
                   debugPrint('button pressed');
                   appState.getNext();
                 },
                 child: Text('Next'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
               ),
             ],
           ),
