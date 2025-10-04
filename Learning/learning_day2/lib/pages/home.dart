@@ -50,20 +50,80 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Container(
-                height: 240,
-                child: ListView.separated(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(height: 50, color: Colors.blue);
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(width: 15);
-                  },
-                  itemCount: populars.length,
-                ),
+              SizedBox(height: 15),
+              ListView.separated(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SvgPicture.asset(
+                          populars[index].iconPath,
+                          width: 65,
+                          height: 65,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              populars[index].name,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              populars[index].level +
+                                  ' | ' +
+                                  populars[index].duration +
+                                  ' | ' +
+                                  populars[index].calories,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: SvgPicture.asset(
+                            'assets/icons/button.svg',
+                            width: 30,
+                            height: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                    decoration: BoxDecoration(
+                      color: populars[index].viewIsSelected
+                          ? Colors.white
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: populars[index].viewIsSelected
+                          ? [
+                              BoxShadow(
+                                color: const Color(
+                                  0xff1D1617,
+                                ).withValues(alpha: 0.3),
+                                blurRadius: 40,
+                                spreadRadius: 0,
+                              ),
+                            ]
+                          : [],
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: 15);
+                },
+                itemCount: populars.length,
               ),
             ],
           ),
@@ -88,6 +148,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(height: 20),
+
         Container(
           height: 240,
           child: ListView.separated(
